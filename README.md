@@ -13,6 +13,14 @@ sudo a2ensite ambrosia.conf
 sudo a2dissite 000-default.conf
 ```
 
+```
+service apache2 reload
+```
+
+```
+service apache2 restart
+```
+
 ### /var/www/ambrosia
 
 ```
