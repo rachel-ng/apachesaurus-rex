@@ -1,4 +1,3 @@
-# apachesaurus-rex
+# apachesaurus rex
 
-why is this (apachesaurus) an actual dinosaur  
-<sup>why was this process so painful</sup>
+why is this an actual dinosaur  
