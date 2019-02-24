@@ -12,11 +12,7 @@ def index():
     '''This function renders the home page, which includes all the user's information if logged in. It also allows the user to input a daily goal.'''
     if 'username' in session:
         username = session['username']
-        plotly_charts.sleep_chart(chart_data.get_user_sleep(username), "sleep")
-        plotly_charts.bar_chart(chart_data.get_user_water(username), "water", "rgb(88,180,197)")
-        plotly_charts.macros_chart([food.get_total_carbs(username), food.get_total_protein(username), food.get_total_fat(username)], "macros")
-        plotly_charts.calorie_chart(chart_data.get_user_food(username), "calories")
-        plotly_charts.bar_chart(chart_data.get_user_exercise(username), "exercise", "rgb(224,75,101)")
+        # plotly_charts.calorie_chart(chart_data.get_user_food(username), "calories")
         exercise_hours = exercise.get_user_exercise(session['username'])
         exercise_last_category = exercise.get_user_category(session['username'])
         if exercise_last_category != None:
@@ -34,7 +30,7 @@ def index():
         if goal == None:
             goal = ""
         if request.method == 'GET':
-            return render_template("index.html", session=session, all_water=all_water,exercise_hours=exercise_hours, exercise_last_category=exercise_last_category, calories=calories, carbs=carbs, protein=protein, fat=fat, goal=goal,last_sleep=last_sleep)
+            return render_template("index.html", session=session, all_water=all_water,exercise_hours=exercise_hours, exercise_last_category=exercise_last_category, calories=calories, carbs=carbs, protein=protein, fat=fat, goal=goal,last_sleep=last_sleep, sleep_chart = plotly_charts.sleep_chart(chart_data.get_user_sleep(username), "sleep"), exercise_chart = plotly_charts.bar_chart(chart_data.get_user_exercise(username), "exercise", "rgb(224,75,101)"), macros_chart = plotly_charts.macros_chart([food.get_total_carbs(username), food.get_total_protein(username), food.get_total_fat(username)], "macros"), water_chart = plotly_charts.bar_chart(chart_data.get_user_water(username), "water", "rgb(88,180,197)"))
         else:
             goal = request.form['goal']
             if (user.update_user_goal(username, goal) == True):
@@ -42,7 +38,7 @@ def index():
                 goal = user.get_user_goal(username)
             else:
                 flash("Something went wrong! Uh oh")
-        return render_template("index.html", session=session, all_water=all_water,exercise_hours=exercise_hours, exercise_last_category=exercise_last_category, calories=calories, carbs=carbs, protein=protein, fat=fat, goal=goal)
+        return render_template("index.html", session=session, all_water=all_water,exercise_hours=exercise_hours, exercise_last_category=exercise_last_category, calories=calories, carbs=carbs, protein=protein, fat=fat, goal=goal, sleep_chart = plotly_charts.sleep_chart(chart_data.get_user_sleep(username), "sleep"), exercise_chart = plotly_charts.bar_chart(chart_data.get_user_exercise(username), "exercise", "rgb(224,75,101)"), macros_chart = plotly_charts.macros_chart([food.get_total_carbs(username), food.get_total_protein(username), food.get_total_fat(username)], "macros"), water_chart = plotly_charts.bar_chart(chart_data.get_user_water(username), "water", "rgb(88,180,197)"))
 
     return render_template("index.html", session=session)
 
@@ -135,8 +131,6 @@ def sleep_disp():
         username = session['username']
         last_sleep = sleep.get_user_sleep(username)
 
-        plotly_charts.sleep_chart(chart_data.get_user_sleep(username), "sleep")
-
         if request.method == 'GET':
             return render_template('sleep.html', past = last_sleep)
         else:
@@ -165,7 +159,7 @@ def sleep_disp():
             else:
                 flash("Something went wrong! Uh oh")
 
-            return render_template('sleep.html', past = last_sleep)
+            return render_template('sleep.html', past = last_sleep, sleep_chart = plotly_charts.sleep_chart(chart_data.get_user_sleep(username), "sleep"))
 
     # if there are errors, redirect to the home page
     except:
@@ -197,7 +191,7 @@ def water_disp():
             else:
                 flash("Input amount of water")
 
-            return render_template('water.html', total = all_water, percentage = water.calc_percentage(username))
+            return render_template('water.html', total = all_water, percentage = water.calc_percentage(username), water_chart = plotly_charts.bar_chart(chart_data.get_user_water(username), "water", "rgb(88,180,197)"))
 
     # if there are errors, redirect to the home page
     except:
@@ -210,9 +204,6 @@ def nutrients():
     '''This function renders the nutrition page with the user's information displayed. It receives the form submitted by the user and passes it to the food functions to update the food log with the meal and the amount eaten.'''
     try:
         username = session['username']
-
-        plotly_charts.macros_chart([food.get_total_carbs(username), food.get_total_protein(username), food.get_total_fat(username)], "macros")
-        plotly_charts.calorie_chart(chart_data.get_user_food(username), "calories")
 
         if request.method == 'GET':
             today_food = food.get_user_food(username)
@@ -233,7 +224,7 @@ def nutrients():
                 total_fat = food.get_total_fat(username)
                 print(today_food)
                 flash("Your meal or amount cannot be empty.")
-                return render_template('nutrients.html', today_food=today_food, calories=total_calories, carbs=total_carbs, fat=total_fat, protein=total_protein)
+                return render_template('nutrients.html', today_food=today_food, calories=total_calories, carbs=total_carbs, fat=total_fat, protein=total_protein, macros_chart = plotly_charts.macros_chart([food.get_total_carbs(username), food.get_total_protein(username), food.get_total_fat(username)], "macros"), calories_chart = plotly_charts.calorie_chart(chart_data.get_user_food(username), "calories"))
 
             if food.add_food(user_meal, user_amount, username) == True:
                 today_food = food.get_user_food(username)
@@ -247,13 +238,13 @@ def nutrients():
                 plotly_charts.calorie_chart(chart_data.get_user_food(username), "calories")
 
                 flash("Food added to log!")
-                return render_template('nutrients.html', today_food=today_food, calories=total_calories, carbs=total_carbs, fat=total_fat, protein=total_protein)
+                return render_template('nutrients.html', today_food=today_food, calories=total_calories, carbs=total_carbs, fat=total_fat, protein=total_protein, macros_chart = plotly_charts.macros_chart([food.get_total_carbs(username), food.get_total_protein(username), food.get_total_fat(username)], "macros"), calories_chart = plotly_charts.calorie_chart(chart_data.get_user_food(username), "calories"))
             else:
                 # catch errors with API key or empty query
                 flash("We could not find the food you entered or the USDA Nutrients API key is missing.")
                 today_food = food.get_user_food(username)
                 total_calories = food.get_total_calories(username)
-                return render_template('nutrients.html', today_food=today_food, calories=total_calories, carbs=total_carbs, fat=total_fat, protein=total_protein)
+                return render_template('nutrients.html', today_food=today_food, calories=total_calories, carbs=total_carbs, fat=total_fat, protein=total_protein, macros_chart = plotly_charts.macros_chart([food.get_total_carbs(username), food.get_total_protein(username), food.get_total_fat(username)], "macros"), calories_chart = plotly_charts.calorie_chart(chart_data.get_user_food(username), "calories"))
     # if there are errors, redirect to the home page
     except:
         flash("You must be logged in to access this page.")
@@ -275,12 +266,12 @@ def exercise_options():
         else:
             category = "You haven't worked out today."
         if request.method == 'GET':
-            return render_template('exercise.html', all_categories=all_categories, can_view_results=False, hours=hours, category=category)
+            return render_template('exercise.html', all_categories=all_categories, can_view_results=False, hours=hours, category=category, exercise_chart = plotly_charts.bar_chart(chart_data.get_user_exercise(username), "exercise", "rgb(224,75,101)"))
         else:
             if request.form['submit'] == "Search":
                 user_request = request.form['user_request']
                 results = exercise.list_category_exercises(exercise.get_category_id(user_request))
-                return render_template('exercise.html', all_categories=all_categories, results=results, can_view_results=True, hours=hours, category=category,requested=user_request)
+                return render_template('exercise.html', all_categories=all_categories, results=results, can_view_results=True, hours=hours, category=category,requested=user_request, exercise_chart = plotly_charts.bar_chart(chart_data.get_user_exercise(username), "exercise", "rgb(224,75,101)"))
             else:
                 user_hours = request.form['hours']
                 user_category = request.form['user_category']
@@ -292,7 +283,7 @@ def exercise_options():
                     hours = exercise.get_user_exercise(username)
                 else:
                     flash("Hours and category cannot be empty.")
-                return render_template('exercise.html', all_categories=all_categories, can_view_results=False, hours=hours, category=category)
+                return render_template('exercise.html', all_categories=all_categories, can_view_results=False, hours=hours, category=category, exercise_chart = plotly_charts.bar_chart(chart_data.get_user_exercise(username), "exercise", "rgb(224,75,101)"))
     # if there are errors, redirect to the home page
     except:
         flash("You must be logged in to access this page.")
@@ -302,5 +293,3 @@ if __name__ == "__main__":
     from flask import Flask, render_template, request, session, redirect, url_for, flash
     app.debug = True
     app.run()
-
-    
