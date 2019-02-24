@@ -89,9 +89,8 @@ def sleep_chart(data, name):
     fig = dict(data=data, layout=layout)
     sleep_c = plotly.offline.plot(fig, include_plotlyjs=False, output_type='div')
 
-    name_chart = 'templates/' + 'sleep' + '_chart.html'
-    with open(name_chart, 'w') as f:
-        f.write(sleep_c)
+    return sleep_c
+
 
 def macros_chart(data, name):
     '''Creates a radar chart for macronutrient data (carbs, protein, fat)'''
@@ -139,9 +138,8 @@ def macros_chart(data, name):
     fig = Figure(data=user_data, layout=layout)
     macros_c = plotly.offline.plot(fig, include_plotlyjs=False, output_type='div')
 
-    name_chart = 'templates/' + name + '_chart.html'
-    with open(name_chart, 'w') as f:
-        f.write(macros_c)
+    return macros_c
+
 
 def calorie_chart(data, name):
     '''Creates a line chart specifically for calories'''
@@ -186,9 +184,8 @@ def calorie_chart(data, name):
     fig = dict(data=data, layout=layout)
     line_c = plotly.offline.plot(fig, include_plotlyjs=False, output_type='div')
 
-    name_chart = 'templates/' + name + '_chart.html'
-    with open(name_chart, 'w') as f:
-        f.write(line_c)
+    return line_c
+
 
 def line_chart(data, name, chart_color):
     '''Creates a line chart'''
@@ -206,9 +203,7 @@ def line_chart(data, name, chart_color):
     fig = dict(data=data, layout=layout)
     line_c = plotly.offline.plot(fig, include_plotlyjs=False, output_type='div')
 
-    name_chart = 'templates/' + name + '_chart.html'
-    with open(name_chart, 'w') as f:
-        f.write(line_c)
+    return line_c
 
 
 def bar_chart(data, name, chart_color):
@@ -235,6 +230,4 @@ def bar_chart(data, name, chart_color):
     fig = dict(data=data, layout=layout)
     bar_c = plotly.offline.plot(fig, include_plotlyjs=False, output_type='div')
 
-    name_chart = 'templates/' + name + '_chart.html'
-    with open(name_chart, 'w') as f:
-        f.write(bar_c)
+    return bar_c
