@@ -1,7 +1,5 @@
 # apachesaurus rex
 
-you know there's an honest to god Problem™ when you've memorized most of these
-
 
 ### apache stuff
 
